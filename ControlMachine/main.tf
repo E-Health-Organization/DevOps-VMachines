@@ -63,6 +63,29 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+  
+  security_rule {
+    name                       = "http"
+    priority                   = 1010
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+    security_rule {
+    name                       = "Jenkins"
+    priority                   = 1011
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "8080"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 
   tags = {
     envirement = "control"
@@ -134,7 +157,7 @@ resource "azurerm_linux_virtual_machine" "linuxvm" {
   resource_group_name   = azurerm_resource_group.rg.name
   location              = azurerm_resource_group.rg.location
   network_interface_ids = [azurerm_network_interface.nic.id]
-  size                  = "Standard_DS1_v2"
+  size                  = "Standard_DS2_v2"
 
   os_disk {
     name                 = "OSDiscCM"

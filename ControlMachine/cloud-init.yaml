@@ -5,6 +5,11 @@
   packages:
     - ansible
     - git
+    - openjdk-17-jdk  # Installation de Java
+    - gnupg
+    - software-properties-common
+    - wget
+    - maven
   runcmd:
     - apt-get update
     - apt-get install -y gnupg software-properties-common
@@ -28,3 +33,32 @@
       Signed-by: /etc/apt/keyrings/microsoft.gpg" | sudo tee /etc/apt/sources.list.d/azure-cli.sources
     - sudo apt-get update
     - sudo apt-get install -y azure-cli
+    - apt-get update
+    - apt-get install -y openjdk-17-jdk
+    - apt-get install -y gnupg software-properties-common wget
+
+    # Ajouter la clé et le dépôt de Jenkins
+    - curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+    - echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/" | tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+    - apt-get update
+
+    # Installer Jenkins
+    - apt-get install -y jenkins
+
+    # Démarrer et activer Jenkins au démarrage
+    - systemctl start jenkins
+    - systemctl enable jenkins
+
+    # Télécharger et installer la dernière version de Maven
+    - wget https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz -P /tmp
+    - tar xf /tmp/apache-maven-3.9.6-bin.tar.gz -C /opt
+    - ln -s /opt/apache-maven-3.9.6 /opt/maven
+
+    # Configurer les variables d'environnement pour Maven
+    - echo "export M2_HOME=/opt/maven" >> /etc/profile.d/maven.sh
+    - echo "export PATH=\$M2_HOME/bin:\$PATH" >> /etc/profile.d/maven.sh
+    - chmod +x /etc/profile.d/maven.sh
+    - source /etc/profile.d/maven.sh
+
+    # Vérifier l'installation de Maven
+    - mvn -version
