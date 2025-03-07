@@ -1,14 +1,14 @@
-variable "public_ip_name" {
-    type = string
-    description = "Public IP for frontend in Azure"
-    default = "front_public_ip"
-}
+# variable "public_ip_name" {
+#     type = string
+#     description = "Public IP for frontend in Azure"
+#     default = "agent_public_ip"
+# }
 
 
 variable "network_interface_name_1" {
     type = string
     description = "NIC name for front in Azure"
-    default = "nic_front"
+    default = "nic_agent"
 }
 
 variable "network_interface_name_2" {
@@ -17,6 +17,7 @@ variable "network_interface_name_2" {
     default = "nic_back"
 }
 
+ 
 
 
 
